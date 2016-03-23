@@ -1,12 +1,11 @@
 import {ctx} from './board';
-import {board} from "./board";
 
 export const ball = {
     posX: 40,
     posY: 40,
 
     speedX: 2,
-    speedY: 3,
+    speedY: 4,
 
     image: document.getElementById("ball"),
 
@@ -16,7 +15,7 @@ export const ball = {
     angle: 0,
     
     get size() {
-        return this.width;
+        return this.width / 2;
     },
     setPosition(x=0, y=0) {
         this.posX = x;

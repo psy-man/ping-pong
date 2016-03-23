@@ -1,18 +1,23 @@
-
-import {board} from './board';
-
+import {ctx, board} from './board';
 import mouse from './mouse';
-
 import ball from './ball';
 import player from './player';
+import {particles, Particle} from './particle';
 
-import {particles, Particle} from './particle'; 
-
+const sounds = {
+    collideWalls: document.getElementById('collide-walls'),
+    collidePlayer: document.getElementById('collide-player')
+};
 
 let {
     innerWidth: windowWidth,
     innerHeight: windowHeight
 } = window;
+
+let score = 0;
+let animation = null;
+let collision = false;
+let isPlayerCollide = false;
 
 
 // Init board
@@ -26,14 +31,15 @@ player.setPosition(board.width / 2 - player.width / 2, board.height - player.hei
 player.render();
 
 
+const gameOver = () => {
 
-let animation = null;
-let collision = false;
-let isPlayerCollide = false;
+    ctx.fillStlye = "black";
+    ctx.font = "20px Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`Game Over - You score is ${score} points!`, board.width / 2, board.height / 2);
 
-const sounds = {
-    collideWalls: document.getElementById('collide-walls'),
-    collidePlayer: document.getElementById('collide-player')
+    cancelAnimationFrame(animation);
 };
 
 const draw = () => {
@@ -42,9 +48,8 @@ const draw = () => {
 
     ball.setPosition(ball.posX + ball.speedX, ball.posY + ball.speedY);
 
-
     // top
-    if (ball.posY <= 0) {
+    if (ball.posY - ball.size <= 0) {
         collision = true;
         ball.speedY = -ball.speedY;
 
@@ -56,13 +61,9 @@ const draw = () => {
 
     // bottom
     if (ball.posY + ball.size >= board.height) {
-        collision = true;
-        ball.speedY = -ball.speedY;
 
-        particles.posX = ball.posX;
-        particles.posY = ball.posY + ball.size;
-
-        particles.direction = 'top';
+        ball.posY = board.height - ball.size;
+        gameOver();
     }
 
     // right
@@ -77,7 +78,7 @@ const draw = () => {
     }
 
     // left
-    if (ball.posX <= 0) {
+    if (ball.posX - ball.size <= 0) {
         collision = true;
         ball.speedX = -ball.speedX;
         
@@ -87,12 +88,22 @@ const draw = () => {
         particles.direction = 'right';
     }
 
-    if (ball.posX >= player.posX && ball.posX <= player.posX + player.width) {
+    if (ball.posX + ball.size / 2 >= player.posX && ball.posX - ball.size / 2 <= player.posX + player.width) {
 
-        if (ball.posY + ball.size >= player.posY - player.height / 2) {
+        if (ball.posY  >= player.posY - player.height) {
 
             collision = true;
             isPlayerCollide = true;
+            score++;
+
+            if (player.direction === -1 && ball.speedX > 0) {
+                ball.speedX = -ball.speedX;
+            }
+
+            if (player.direction === 1 && ball.speedX < 0) {
+                ball.speedX = -ball.speedX;
+            }
+
             ball.speedY = -ball.speedY;
 
             particles.posX = ball.posX;
@@ -100,8 +111,10 @@ const draw = () => {
 
             particles.direction = 'top';
 
-            // ball.speedX += (ball.speedX < 0) ? -1 : 1;
-            // ball.speedY += (ball.speedY < 0) ? -2 : 2;
+            if (score % 4 === 0) {
+                ball.speedX += (ball.speedX < 0) ? -1 : 1;
+                ball.speedY += (ball.speedY < 0) ? -2 : 2;
+            }
         }
     }
 
@@ -128,6 +141,8 @@ const draw = () => {
     particles.emit();
 
     player.posX = mouse.posX - player.width / 2;
+    player.direction = (player.posX === player.lastPosX) ? 0 : (player.posX > player.lastPosX) ? 1 : -1 ;
+    player.lastPosX = player.posX;
     player.render();
 };
 

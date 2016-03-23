@@ -18,7 +18,7 @@ const paths = {
     styles: ['./css/**/*.less']
 };
 
-var onError = function (err) {
+const onError = function (err) {
     gutil.log(gutil.colors.red("ERROR: \n"), gutil.colors.yellow(err.message));
     this.emit("end");
 };

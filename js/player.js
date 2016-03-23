@@ -3,6 +3,9 @@ import {ctx} from './board';
 export const player = {
     posX: 0,
     posY: 0,
+    
+    lastPosX: 0,
+    direction: 0,
 
     width: 120,
     height: 10,
