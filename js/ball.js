@@ -5,7 +5,7 @@ export const ball = {
     posY: 40,
 
     speedX: 2,
-    speedY: 4,
+    speedY: -4,
 
     image: document.getElementById("ball"),
 
@@ -13,7 +13,7 @@ export const ball = {
     height: 20,
 
     angle: 0,
-    
+
     get size() {
         return this.width / 2;
     },

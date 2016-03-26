@@ -1,59 +1,79 @@
 import {ctx} from './board';
+import {ball} from "./ball";
+
+
+export const particle = (x, y, dir, c) => ({
+
+    posX: x,
+    posY: y,
+
+    speedX: 0,
+    speedY: 0,
+
+    color: c,
+
+    radius: 1.8,
+
+    init() {
+
+        switch (dir) {
+            case 'top':
+                this.speedX = -1.5 + Math.random() * 6;
+                this.speedY = -1 * Math.random() * 3;
+                break;
+            case 'bottom':
+                this.speedX = -1.9 + Math.random() * 6;
+                this.speedY = Math.random() * 3;
+                break;
+            case 'left':
+                this.speedX = -Math.random() * 6;
+                this.speedY = Math.random() * 3;
+                break;
+            case 'right':
+                this.speedX =  Math.random() * 6;
+                this.speedY = -1 * Math.random() * 3;
+                break;
+            case 'center':
+                this.speedX = -1.5 + Math.random() * 2.5;
+                this.speedY = -1 * Math.random() * 1.5;
+                break;
+        }
+
+        return this;
+    }
+});
 
 export const particles = {
-    count: 60,
+    count: 20,
 
-    posX: 0,
-    posY: 0,
-
-    direction: 'top',
-
-    color: 'black',
     list: [],
+
+    build(dir, color) {
+        for (let i = 0; i < this.count; i++) {
+            this.list.push(
+                particle(ball.posX, ball.posY, dir, color).init()
+            );
+        }
+    },
 
     emit() {
 
-        this.list = this.list.filter(e => e.radius > 0 );
+        this.list = this.list.filter(e => e.radius > 0);
 
-        this.list.map(particle => {
+        this.list.map(p => {
 
             ctx.beginPath();
-            ctx.fillStyle = this.color;
-            if (particle.radius > 0) {
-                ctx.arc(particle.posX, particle.posY, particle.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = p.color;
+            if (p.radius > 0) {
+                ctx.arc(p.posX, p.posY, p.radius, 0, Math.PI * 2, false);
             }
             ctx.fill();
 
-            particle.posX += particle.speedX;
-            particle.posY += particle.speedY;
+            p.posX += p.speedX;
+            p.posY += p.speedY;
 
-            particle.radius = Math.max(particle.radius - 0.08, 0.0);
+            p.radius = Math.max(p.radius - 0.08, 0.0);
         });
     }
 };
 
-export function Particle({posX: x, posY: y, direction: dir}) {
-    this.posX = x;
-    this.posY = y;
-
-    this.radius = 2;
-
-    switch (dir) {
-        case 'top':
-            this.speedX = -1.5 + Math.random() * 6;
-            this.speedY = -1 * Math.random() * 3;
-            break;
-        case 'bottom':
-            this.speedX = -1.9 + Math.random() * 6;
-            this.speedY = Math.random() * 3;
-            break;
-        case 'left':
-            this.speedX = -Math.random() * 6;
-            this.speedY = Math.random() * 3;
-            break;
-        case 'right':
-            this.speedX =  Math.random() * 6;
-            this.speedY = -1 * Math.random() * 3;
-            break;
-    }
-}

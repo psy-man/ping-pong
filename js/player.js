@@ -1,4 +1,6 @@
 import {ctx} from './board';
+import {mouse} from "./mouse";
+import {board} from "./board";
 
 export const player = {
     posX: 0,
@@ -15,6 +17,20 @@ export const player = {
     setPosition(x=0, y=0) {
         this.posX = x;
         this.posY = y;
+    },
+    move() {
+
+        const left = mouse.posX - this.width / 2;
+        const right = mouse.posX + this.width / 2;
+
+        if (left < 0) {
+            this.posX = 0;
+        } else if(right > board.width) {
+            this.posX = board.width - this.width;
+        } else {
+            this.posX = left;
+        }
+        
     },
     render() {
         ctx.beginPath();
