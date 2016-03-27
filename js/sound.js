@@ -1,4 +1,12 @@
-
+/**
+ * Sound class
+ * 
+ * @type {{
+ *  sounds: {
+ *      collide: {wall: Element, player: Element, brick: Element}
+ *  },
+ *  play: (function(String, String))}}
+ */
 export const sound = {
     sounds: {
         collide: {
@@ -8,6 +16,12 @@ export const sound = {
         }
     },
 
+    /**
+     * 
+     * @param {String} action
+     * @param {String} type
+     * @returns {*|void}
+     */
     play(action, type) {
 
         if (this.sounds.hasOwnProperty(action) && this.sounds[action].hasOwnProperty(type)) {

@@ -4,7 +4,12 @@ import sound from "./sound";
 import {particles} from "./particle";
 import {game} from "./game";
 
-
+/**
+ * Bricks factory
+ * 
+ * @param {Number} x [x=0]
+ * @param {Number} y [y=0]
+ */
 export const brick  = (x = 0, y = 0) => ({
     posX: x,
     posY: y,
@@ -15,20 +20,47 @@ export const brick  = (x = 0, y = 0) => ({
 
     visible: true,
 
+    /**
+     * Calculating the brick width
+     * 
+     * @returns {Number}
+     */
     get width() {
         return (board.width  - bricks.offset * (bricks.columns - 1)) / bricks.columns;
     },
-    
-    setPosition(x=0, y=0) { 
+
+    /**
+     * Set brick position
+     *
+     * @param {Number} x [x=0]
+     * @param {Number} y [y=0]
+     */
+    setPosition(x = 0, y = 0) { 
         this.posX = x;
         this.posY = y;
     },
+
+    /**
+     * Returns the center X position of brick
+     * 
+     * @returns {Number}
+     */
     centerX() {
         return this.posX + this.width / 2;
     },
+
+    /**
+     * Returns the center Y position of brick
+     *
+     * @returns {Number}
+     */
     centerY() {
         return this.posY + this.height / 2;
     },
+
+    /**
+     * Display the brick on canvas
+     */
     render() {
         ctx.beginPath();
         ctx.fillStyle = this.color;
@@ -38,7 +70,21 @@ export const brick  = (x = 0, y = 0) => ({
     }
 });
 
-
+/**
+ * Bricks manipulation object
+ * 
+ * @type {{
+ *  offset: Number, 
+ *  offsetTop: Number, 
+ *  rows: Number, 
+ *  maxBrickWidth: Number, 
+ *  list: Array, 
+ *  columns, 
+ *  getRandomColor: (function()), 
+ *  build: (function()), 
+ *  render: (function())
+ * }}
+ */
 export const bricks = {
     offset: 0,
     offsetTop: 60,
@@ -49,10 +95,20 @@ export const bricks = {
 
     list: [],
 
+    /**
+     * Calculate the columns count
+     *
+     * @returns {Number}
+     */
     get columns() {
         return Math.floor(board.width / this.maxBrickWidth);
     },
 
+    /**
+     * Get random color
+     *
+     * @returns {String}
+     */
     getRandomColor() {
         var letters = '0123456789ABCDEF'.split('');
         var color = '#';
@@ -62,6 +118,9 @@ export const bricks = {
         return color;
     },
 
+    /**
+     * Drawing all bricks on canvas
+     */
     build() {
 
         for (let r = 0; r < this.rows; r++) {
@@ -76,11 +135,15 @@ export const bricks = {
             }
         }
     },
-    
+
+
+    /**
+     * Detecting collisions between ball and bricks
+     */
     render() {
 
         if (this.list.length - game.score === 0) {
-            game.win();
+            game.victory();
         }
 
         let collision = false;
@@ -88,7 +151,7 @@ export const bricks = {
 
             if (b.visible === true) {
 
-                if (ball.posX + ball.center >= b.posX && ball.posX - ball.center  <= b.posX + b.width) {
+                if (ball.posX + ball.radius >= b.posX && ball.posX - ball.radius  <= b.posX + b.width) {
                     if (ball.posY < b.posY + b.height && ball.posY + ball.size > b.posY) {
 
                         b.visible = false;

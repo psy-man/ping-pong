@@ -25,7 +25,9 @@ player.render();
 //
 bricks.build();
 
-
+/**
+ * Detecting the collision between player and ball
+ */
 const collision = () => {
 
     // top
@@ -47,7 +49,7 @@ const collision = () => {
     }
 
     // player or game over :(
-    if (ball.posX + ball.center >= player.posX && ball.posX <= player.posX + player.width && ball.posY + ball.size >= player.posY) {
+    if (ball.posX + ball.radius >= player.posX && ball.posX <= player.posX + player.width && ball.posY + ball.size >= player.posY) {
 
         if (player.direction === -1 && ball.speedX > 0) {
             ball.speedX = -ball.speedX;
@@ -57,9 +59,9 @@ const collision = () => {
             ball.speedX = -ball.speedX;
         }
 
-        ball.speedY = -ball.speedY;
+        ball.speedY = -ball.speedY; 
 
-        particles.build(ball.posX + ball.center, ball.posY + ball.size, 'black');
+        particles.build(ball.posX + ball.radius, ball.posY + ball.size, 'black');
         sound.play('collide', 'player')
         
     } else if (ball.posY + ball.size >= board.height) {
@@ -68,6 +70,10 @@ const collision = () => {
     }
 };
 
+
+/**
+ * Updating the canvas
+ */
 const draw = () => {
 
     board.render();
@@ -87,6 +93,10 @@ const draw = () => {
     player.render();
 };
 
+
+/**
+ * Main game loop
+ */
 const animationLoop = () => {
     animation = requestAnimationFrame(animationLoop);
     draw();
