@@ -1,65 +1,31 @@
 import {ctx} from './board';
-import {ball} from "./ball";
 
 
-export const particle = (x, y, dir, c) => ({
-
+export const particle = (x, y, c) => ({
     posX: x,
     posY: y,
 
-    speedX: 0,
-    speedY: 0,
+    speedX: -5 + Math.random() * 10,
+    speedY:  -5 + Math.random() * 10,
 
-    color: c,
+    color: c, 
 
-    radius: 1.8,
-
-    init() {
-
-        switch (dir) {
-            case 'top':
-                this.speedX = -1.5 + Math.random() * 6;
-                this.speedY = -1 * Math.random() * 3;
-                break;
-            case 'bottom':
-                this.speedX = -1.9 + Math.random() * 6;
-                this.speedY = Math.random() * 3;
-                break;
-            case 'left':
-                this.speedX = -Math.random() * 6;
-                this.speedY = Math.random() * 3;
-                break;
-            case 'right':
-                this.speedX =  Math.random() * 6;
-                this.speedY = -1 * Math.random() * 3;
-                break;
-            case 'center':
-                this.speedX = -1.5 + Math.random() * 2.5;
-                this.speedY = -1 * Math.random() * 1.5;
-                break;
-        }
-
-        return this;
-    }
+    radius: 3.5
 });
 
 export const particles = {
     count: 20,
-
     list: [],
 
-    build(dir, color) {
+    build(x, y, color) {
         for (let i = 0; i < this.count; i++) {
-            this.list.push(
-                particle(ball.posX, ball.posY, dir, color).init()
-            );
+            this.list.push(particle(x, y, color));
         }
     },
 
     emit() {
 
         this.list = this.list.filter(e => e.radius > 0);
-
         this.list.map(p => {
 
             ctx.beginPath();
@@ -68,11 +34,12 @@ export const particles = {
                 ctx.arc(p.posX, p.posY, p.radius, 0, Math.PI * 2, false);
             }
             ctx.fill();
+            ctx.closePath();
 
             p.posX += p.speedX;
             p.posY += p.speedY;
 
-            p.radius = Math.max(p.radius - 0.08, 0.0);
+            p.radius = Math.max(p.radius - 0.2, 0.0);
         });
     }
 };

@@ -12,11 +12,11 @@ export const sound = {
 
         if (this.sounds.hasOwnProperty(action) && this.sounds[action].hasOwnProperty(type)) {
             this.sounds[action][type].currentTime = 0;
-            this.sounds[action][type].volume = 0.4;
+            this.sounds[action][type].volume = 0.6;
             return this.sounds[action][type].play();
         }
 
-        throw new Error(`Sound with action '${action}' and type '${type}' is not defined`);
+        throw new Error(`Sound with action: '${action}' and type: '${type}' is not defined`);
     }
 };
 

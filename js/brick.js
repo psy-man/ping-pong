@@ -1,21 +1,34 @@
-import {ctx} from './board';
-import {board} from "./board";
+import {ctx, board} from './board';
 import {ball} from "./ball";
 import sound from "./sound";
 import {particles} from "./particle";
+import {game} from "./game";
 
 
 export const brick  = (x = 0, y = 0) => ({
     posX: x,
     posY: y,
 
-    width: 40,
     height: 20,
 
     color: 'green',
 
     visible: true,
 
+    get width() {
+        return (board.width  - bricks.offset * (bricks.columns - 1)) / bricks.columns;
+    },
+    
+    setPosition(x=0, y=0) { 
+        this.posX = x;
+        this.posY = y;
+    },
+    centerX() {
+        return this.posX + this.width / 2;
+    },
+    centerY() {
+        return this.posY + this.height / 2;
+    },
     render() {
         ctx.beginPath();
         ctx.fillStyle = this.color;
@@ -27,19 +40,18 @@ export const brick  = (x = 0, y = 0) => ({
 
 
 export const bricks = {
-
     offset: 0,
     offsetTop: 60,
-    
-    columns: 0,
+
     rows: 6,
 
     maxBrickWidth: 100,
-    maxBrickHeight: 20,
 
-    colors: ['red', 'green', 'blue'],
-    
     list: [],
+
+    get columns() {
+        return Math.floor(board.width / this.maxBrickWidth);
+    },
 
     getRandomColor() {
         var letters = '0123456789ABCDEF'.split('');
@@ -52,14 +64,11 @@ export const bricks = {
 
     build() {
 
-        this.columns = Math.floor(board.width / this.maxBrickWidth)
-        let width = (board.width  - this.offset * (this.columns - 1)) / this.columns;
-
         for (let r = 0; r < this.rows; r++) {
             for (let c = 0; c < this.columns; c++) {
 
-                let b = brick(c * (width + this.offset), this.offsetTop + ((this.offset + this.maxBrickHeight) * r));
-                b.width = width;
+                let b = brick();
+                b.setPosition(c * (b.width + this.offset), this.offsetTop + ((this.offset + b.height) * r));
                 b.color = this.getRandomColor();
                 b.render();
 
@@ -69,20 +78,37 @@ export const bricks = {
     },
     
     render() {
+
+        if (this.list.length - game.score === 0) {
+            game.win();
+        }
+
+        let collision = false;
         this.list = this.list.map(b => {
 
             if (b.visible === true) {
 
-                if (ball.posX + ball.size / 2 >= b.posX && ball.posX - ball.size / 2 <= b.posX + b.width) {
-
-                    if (ball.posY - ball.size < b.posY + b.height && ball.posY + ball.size > b.posY) {
-
-                        ball.speedY = -ball.speedY;
-
-                        particles.build('center', b.color);
-                        sound.play('collide', 'brick');
+                if (ball.posX + ball.center >= b.posX && ball.posX - ball.center  <= b.posX + b.width) {
+                    if (ball.posY < b.posY + b.height && ball.posY + ball.size > b.posY) {
 
                         b.visible = false;
+
+                        if (!collision) {
+                            ball.speedY = -ball.speedY;
+                            collision = true;
+                        }
+
+                        game.score++;
+
+                        if (game.score % game.multiplier === 0) {
+                            ball.speedX += (ball.speedX < 0) ? -1 : 1;
+                            ball.speedY += (ball.speedY < 0) ? -2 : 2;
+                            
+                            game.levelUp();
+                        }
+
+                        particles.build(b.centerX(), b.centerY(), b.color);
+                        sound.play('collide', 'brick');
                     }
                 }
 

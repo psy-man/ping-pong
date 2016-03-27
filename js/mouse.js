@@ -11,8 +11,6 @@ export const mouse = {
 };
 
 // listeners
-canvas.addEventListener("mousemove", (e) => {
-    mouse.setPosition(e.pageX, e.pageY);
-}, true);
+canvas.addEventListener("mousemove", (e) => mouse.setPosition(e.pageX, e.pageY) , true);
 
 export default mouse;

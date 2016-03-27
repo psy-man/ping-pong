@@ -31,6 +31,8 @@ export const player = {
             this.posX = left;
         }
         
+        this.direction = (this.posX === this.lastPosX) ? 0 : (this.posX > this.lastPosX) ? 1 : -1 ;
+        this.lastPosX = this.posX;
     },
     render() {
         ctx.beginPath();
