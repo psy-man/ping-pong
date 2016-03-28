@@ -19,10 +19,10 @@ board.render();
 
 ball.setPosition(200, board.height / 3 * 2);
 ball.render();
-//
+
 player.setPosition(board.width / 2 - player.width / 2, board.height - player.height);
 player.render();
-//
+
 bricks.build();
 
 /**

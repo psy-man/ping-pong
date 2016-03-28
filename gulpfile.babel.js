@@ -14,8 +14,10 @@ import gutil from "gulp-util";
 const browserSync = bsCreate();
 
 const paths = {
+    html: ['./index.html'],
     scripts: ['./js/**/*.js'],
-    styles: ['./css/**/*.less']
+    styles: ['./css/**/*.less'],
+    build: './build'
 };
 
 const onError = function (err) {
@@ -29,32 +31,35 @@ gulp.task('styles', () =>
         .pipe(less().on('error', onError))
         .pipe(autoprefixer())
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('./build'))
+        .pipe(gulp.dest(paths.build))
         .pipe(browserSync.stream())
     );
 
 gulp.task('scripts', () =>
      browserify({entries: './js/app.js', debug: true })
          .transform(babelify)
-         .bundle()
-         .on('error', onError)
+         .bundle().on('error', onError)
          .pipe(source('app.js'))
          .pipe(buffer())
-         .pipe(gulp.dest('./build'))
+         .pipe(gulp.dest(paths.build))
          .pipe(browserSync.stream())
     );
 
+gulp.task('html', () =>
+    gulp.src(paths.html)
+        .pipe(browserSync.stream())
+    );
 
-gulp.task('watch', ['scripts', 'styles'], () => {
+gulp.task('watch', ['scripts', 'styles', 'html'], () => {
     browserSync.init({
-    server: {
-        baseDir: "./"
-    }
-});
+        server: {
+            baseDir: "./"
+        }
+    });
 
-gulp.watch(paths.styles, ['styles']);
-gulp.watch(paths.scripts, ['scripts']);
-gulp.watch("./index.html").on('change', browserSync.reload);
+    gulp.watch(paths.styles, ['styles']);
+    gulp.watch(paths.scripts, ['scripts']);
+    gulp.watch(paths.html, ['html']);
 });
 
 gulp.task('default', ['watch']);
