@@ -2,10 +2,16 @@ import {board, ctx, canvas} from "./board";
 import {animationLoop} from "./app";
 import {game} from "./game";
 
+/**
+ * Start button
+ */
 export const startButton = {
   width: 120,
   height: 40,
 
+  /**
+   * Display the button
+   */
   render() {
     this.posX = board.width / 2 - this.width / 2;
     this.posY =  board.height / 2 - this.height / 2;
@@ -22,10 +28,17 @@ export const startButton = {
   }
 };
 
+
+/**
+ * Restart button
+ */
 export const restartButton = {
   width: 120,
   height: 40,
 
+  /**
+   * Display button
+   */
   render() {
     this.posX = board.width / 2 - this.width / 2;
     this.posY =  board.height / 2 + 60;
