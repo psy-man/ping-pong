@@ -1,1 +1,1 @@
-"Javascript Ping Pong game" 
+# Ping Pong game written in Javascript 
