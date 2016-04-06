@@ -14,52 +14,52 @@ import gutil from "gulp-util";
 const browserSync = bsCreate();
 
 const paths = {
-    html: ['./index.html'],
-    scripts: ['./js/**/*.js'],
-    styles: ['./css/**/*.less'],
-    build: './build'
+  html: ['./index.html'],
+  scripts: ['./js/**/*.js'],
+  styles: ['./css/**/*.less'],
+  build: './build'
 };
 
 const onError = function (err) {
-    gutil.log(gutil.colors.red("ERROR: \n"), gutil.colors.yellow(err.message));
-    this.emit("end");
+  gutil.log(gutil.colors.red("ERROR: \n"), gutil.colors.yellow(err.message));
+  this.emit("end");
 };
 
 gulp.task('styles', () =>
-    gulp.src("./css/styles.less")
-        .pipe(sourcemaps.init())
-        .pipe(less().on('error', onError))
-        .pipe(autoprefixer())
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(paths.build))
-        .pipe(browserSync.stream())
-    );
+  gulp.src("./css/styles.less")
+    .pipe(sourcemaps.init())
+    .pipe(less().on('error', onError))
+    .pipe(autoprefixer())
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(paths.build))
+    .pipe(browserSync.stream())
+);
 
 gulp.task('scripts', () =>
-     browserify({entries: './js/app.js', debug: true })
-         .transform(babelify)
-         .bundle().on('error', onError)
-         .pipe(source('app.js'))
-         .pipe(buffer())
-         .pipe(gulp.dest(paths.build))
-         .pipe(browserSync.stream())
-    );
+  browserify({entries: './js/app.js', debug: true})
+    .transform(babelify)
+    .bundle().on('error', onError)
+    .pipe(source('app.js'))
+    .pipe(buffer())
+    .pipe(gulp.dest(paths.build))
+    .pipe(browserSync.stream())
+);
 
 gulp.task('html', () =>
-    gulp.src(paths.html)
-        .pipe(browserSync.stream())
-    );
+  gulp.src(paths.html)
+    .pipe(browserSync.stream())
+);
 
 gulp.task('watch', ['scripts', 'styles', 'html'], () => {
-    browserSync.init({
-        server: {
-            baseDir: "./"
-        }
-    });
+  browserSync.init({
+    server: {
+      baseDir: "./"
+    }
+  });
 
-    gulp.watch(paths.styles, ['styles']);
-    gulp.watch(paths.scripts, ['scripts']);
-    gulp.watch(paths.html, ['html']);
+  gulp.watch(paths.styles, ['styles']);
+  gulp.watch(paths.scripts, ['scripts']);
+  gulp.watch(paths.html, ['html']);
 });
 
 gulp.task('default', ['watch']);

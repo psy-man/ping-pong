@@ -2,7 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PinPong</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+    <meta name="copyright" content="psy-man">
+    <meta name="author" content="Eugene Filipyev, w.0.w@mail.ru">
+    <meta name="reply-to" content="w.0.w@mail.ru">
+
+    <meta name="keywords" content="Ping Pong, Game, Javascript, ES6, ECMAScript 6, Canvas">
+    <meta name="description" content="Ping Pong game written in Javascript"/>
+
+    <title>Ping Pong</title>
+
+    <meta property="og:site_name" content="Ping Pong"/>
+    <meta property="og:type" content="game"/>
+    <meta property="og:title" content="Ping Pong"/>
+    <meta property="og:description" content="Ping Pong game written in Javascript"/>
+    <meta property="og:url" content="http://psy-man.github.io/ping-pong/"/>
+    <meta property="og:image" content="http://psy-man.github.io/ping-pong/images/ball.png"/>
+
+    <link rel="apple-touch-icon" type="image/png" href="images/ball.png">
+    <link rel="shortcut icon" type="image/png" href="images/ball.png"/>
 
     <link rel="stylesheet" href="build/styles.css">
 </head>
@@ -11,6 +30,7 @@
     <canvas id="board"></canvas>
     
     <div class="hide">
+
         <!--sounds-->
         <audio id="collide-walls" src="sounds/Ping%20pong%20ball%20bounce%20ping%20pong%20table_BLASTWAVEFX_16054.mp3" preload="auto"></audio>
         <audio id="collide-player" src="sounds/Ping%20pong%20paddle%20hit%20ball%20hard_BLASTWAVEFX_16055.mp3" preload="auto"></audio>
