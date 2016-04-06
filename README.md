@@ -1,4 +1,4 @@
-# Javascript Pin Pong
+# Javascript Ping Pong
 
 ![](http://i.imgur.com/3psw2Y9.png)
 
